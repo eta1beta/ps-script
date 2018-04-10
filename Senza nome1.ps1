@@ -1,25 +1,6 @@
-﻿## $srcFolder = "P:\Immagini\911"
-## $srcFolder = "P:\Immagini\Cesenatico-meganevone"
-## $srcFolder = "P:\Immagini\dmcfx150"
-## $srcFolder = "P:\Immagini\foto_telefoni\(2004 - 2005) - Nokia 6630"
-## $srcFolder = "P:\Immagini\foto_telefoni\(2005 - 2007) - Sony Ericsson k750"
-## $srcFolder = "P:\Immagini\foto_telefoni\(2007 - 2008) - Nokia e65"
-## $srcFolder = "P:\Immagini\foto_telefoni\(2008 - 2010) - iphone 3g"
-## $srcFolder = "P:\Immagini\foto_telefoni\(2008 - 2010) - Nokia n82"
-## $srcFolder = "P:\Immagini\foto_telefoni\(2010 - 2012) - htc desire"
-## $srcFolder = "P:\Immagini\foto_telefoni\(2011 - 2013) - Samsung Galaxy Nexus"
-## $srcFolder = "P:\Immagini\foto_telefoni\(2012 - 2015) - Nokia lumia 920"
-## $srcFolder = "P:\Immagini\foto_telefoni\(2015 - 2017) - iphone6"
-## $srcFolder = "P:\Immagini\luca"
-## $srcFolder = "P:\Immagini\varie\capodanno_05"
-## $srcFolder = "P:\Immagini\varie\comunione luca"
-## $srcFolder = "P:\Immagini\varie\mercatino_europeo"
-## $srcFolder = "P:\Immagini\varie\mugello"
-## $srcFolder = "P:\Immagini\foto_telefoni\video\Nuova cartella"
+﻿$srcFolder = "P:\Immagini\foto_telefoni"
 
-$srcFolder = "P:\Immagini\foto_telefoni"
-
-$taregtFolder = "Q:\ANNO"
+$taregtFolder = "P:\ANNO"
 
 $files = Get-ChildItem -Path $srcFolder -include *.* –Recurse 
 
@@ -36,9 +17,13 @@ foreach ($file in $files){
 		#32 CameraMaker,#12 DateTaken,#30 CameraModel
 		
 		$dateTaken = $shellfolder.GetDetailsOf($shellfile, 12)
-			
+		
+        # Write-host $shellfile.ModifyDate
+        # pause
+        	
 		if([string]::IsNullOrWhiteSpace($dateTaken)) {    
-			$parseDate =[datetime]$file.CreationTime  
+			# $parseDate =[datetime]$file.CreationTime  
+            $parseDate =[datetime]$shellfile.ModifyDate  
 		} 	
 		else{
 			#http://stackoverflow.com/questions/25474023/file-date-metadata-not-displaying-properly
@@ -46,6 +31,10 @@ foreach ($file in $files){
 			$parseDate =[datetime]::ParseExact($dateTaken,"g",$null)
 		}
 		
+        #write-host $parseDate
+        #pause
+
+
 		$year = $parseDate.Year	
 		$monthNr = "{0:MM}" -f $parseDate
 		$month = "{0:MMMM}" -f $parseDate		
@@ -64,8 +53,9 @@ foreach ($file in $files){
 		$targetFile = "$directory\$newFileName"
 		
 		# Copy-Item $file.FullName -Destination $targetFile
-        # Move-Item $file.FullName -Destination $targetFile
-        Write-Host $file.FullName $targetFile
+        Move-Item $file.FullName -Destination $targetFile
+        # Write-Host $file.FullName $targetFile
+
 
 	}
 	catch{
